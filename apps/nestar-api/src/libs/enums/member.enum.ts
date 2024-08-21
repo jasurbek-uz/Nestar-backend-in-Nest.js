@@ -27,8 +27,8 @@ export enum MemberAuthType{
   TELEGRAM = 'TELEGRAM',
 }
 
-registerEnumType(MemberStatus, {
-	name: 'MemberStatus',
+registerEnumType(MemberAuthType, {
+	name: 'MemberAuthType',
 });
  
 

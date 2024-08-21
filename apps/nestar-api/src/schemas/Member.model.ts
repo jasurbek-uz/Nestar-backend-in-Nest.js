@@ -22,14 +22,12 @@ const MemberSchema = new Schema({
 
   memberPhone: {
     type: String,
-    enum: MemberAuthType,
     index: { unique: true, sparse: true },
     required: true,
   },
 
   memberNick: {
     type: String,
-    enum: MemberAuthType,
     index: { unique: true, sparse: true },
     required: true,
   },
