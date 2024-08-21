@@ -21,7 +21,8 @@ export class MemberResolver {
 		}
 	}
 
-	@Mutation(() => Member)
+  @Mutation(() => Member)
+    @UsePipes(ValidationPipe)
 	public async login(@Args('input') input: LoginInput): Promise<Member> {
 		try {
 			console.log('Mutation: input');
