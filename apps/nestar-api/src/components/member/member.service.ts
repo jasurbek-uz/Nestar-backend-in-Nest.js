@@ -38,7 +38,7 @@ export class MemberService {
 
     // todo Compare passwords
     const isMatch = memberPassword === response.memberPassword;
-    if(isMatch) throw new InternalServerErrorException(Message.WRONG_PASSWORD)
+    if(!isMatch) throw new InternalServerErrorException(Message.WRONG_PASSWORD)
 		return response;
 	}
 
