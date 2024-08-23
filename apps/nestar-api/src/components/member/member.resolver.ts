@@ -22,7 +22,7 @@ export class MemberResolver {
 	}
 
   @Mutation(() => Member)
-    @UsePipes(ValidationPipe)
+  @UsePipes(ValidationPipe)
 	public async login(@Args('input') input: LoginInput): Promise<Member> {
 		try {
 			console.log('Mutation: input');
