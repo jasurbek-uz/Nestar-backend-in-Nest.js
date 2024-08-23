@@ -18,7 +18,7 @@ import { T } from "./libs/types/common";
     formatError: (error: T) => {
       console.log("error:", error);
       const graphQlFormattedError = {
-				code: error?.extension.code,
+				code: error?.extensions.code,
 				message: error?.extensions?.exception?.reponse?.message || error?.extentions?.exception?.reponse?.message || error?.message,
 			};
       console.log('GRAPHQL GLOBAL ERR:', graphQlFormattedError);
