@@ -17,12 +17,12 @@ import { T } from "./libs/types/common";
     autoSchemaFile: true,
     formatError: (error: T) => {
       console.log("error:", error);
-      const graphQlFormattedError = {
+      const graphQLFormattedError = {
 				code: error?.extensions.code,
 				message: error?.extensions?.exception?.reponse?.message || error?.extentions?.exception?.reponse?.message || error?.message,
 			};
-      console.log('GRAPHQL GLOBAL ERR:', graphQlFormattedError);
-      return graphQlFormattedError;
+      console.log('GRAPHQL GLOBAL ERR:', graphQLFormattedError);
+      return graphQLFormattedError;
     }
   }), ComponentsModule, DatabaseModule],
   
