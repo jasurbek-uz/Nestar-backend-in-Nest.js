@@ -21,15 +21,31 @@ export class MemberResolver {
 			return this.memberService.login(input);
 	}
 
+  // Authenticated users, agents, admins// 
 	@Mutation(() => String)
 	public async updateMember(): Promise<string> {
 		console.log('Mutation: updateMember');
 		return this.memberService.updateMember();
 	}
 
+  @Query(() => String)
+  public async getMember(): Promise<string> {
+    console.log('Query: getMember');
+    return this.memberService.getMember();
+  }
+
+
+    // ADMIN MANAGEMENT// 
+    
+  @Mutation(() => String)
+  public async getAllMembersByAdmin(): Promise<string> {
+
+    return this.memberService.getAllMembersByAdmin();
+  }
+
 	@Query(() => String)
-	public async getMember(): Promise<string> {
-		console.log('Query: getMember');
-		return this.memberService.getMember();
+	public async updateMemberByAdmin(): Promise<string> {
+		
+		return this.memberService.updateMemberByAdmin() ;
 	}
 }
