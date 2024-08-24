@@ -23,7 +23,7 @@ import { T } from "./libs/types/common";
 			};
       console.log('GRAPHQL GLOBAL ERR:', graphQLFormattedError);
       return graphQLFormattedError;
-    }
+    },
   }), ComponentsModule, DatabaseModule],
   
   controllers: [AppController],

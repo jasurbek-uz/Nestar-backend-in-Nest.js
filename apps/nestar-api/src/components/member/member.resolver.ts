@@ -8,7 +8,7 @@ import { Member } from "../../libs/dto/member/member";
 export class MemberResolver {
 	constructor(private readonly memberService: MemberService) {}
 
-	@Mutation(() => Member)
+  @Mutation(() => Member)
 	public async signup(@Args('input') input: MemberInput): Promise<Member> {
 			console.log('Mutation: signup');
 			console.log('input: input');
