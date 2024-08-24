@@ -72,4 +72,4 @@ export class MemberResolver {
 	public async updateMemberByAdmin(): Promise<string> {
 		return this.memberService.updateMemberByAdmin();
 	}
-}
+};
