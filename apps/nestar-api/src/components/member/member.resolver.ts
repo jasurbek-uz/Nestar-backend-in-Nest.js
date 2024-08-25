@@ -1,6 +1,6 @@
 import { Args, Mutation,Query, Resolver } from '@nestjs/graphql';
 import { MemberService } from "./member.service";
-import { InternalServerErrorException, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
+import {  UseGuards } from "@nestjs/common";
 import { LoginInput, MemberInput } from "../../libs/dto/member/member.input";
 import { Member } from "../../libs/dto/member/member";
 import { AuthGuard } from "../auth/guards/auth.guard";
@@ -59,7 +59,7 @@ export class MemberResolver {
 		return this.memberService.getMember();
 	}
 
-	// ADMIN MANAGEMENT//
+	// ADMIN MANAGEMENT:Admin//
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
 	@Mutation(() => String)

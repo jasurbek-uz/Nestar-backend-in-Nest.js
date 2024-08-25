@@ -1,26 +1,42 @@
+// ZN-TASK:
+
+// Shunday function yozing, uni array va number parametri bolsin. 
+//Ikkinchi parametrda berilgan raqamli indexgacha arrayni orqasiga ogirib qaytarsin.
+// MASALAN: rotateArray([1, 2, 3, 4, 5, 6], 3) return [5, 6, 1, 2, 3, 4]
+
+function rotateArray(arr, index) {
+	const n = arr.length;
+	index %= n;
+
+	return arr.slice(index).concat(arr.slice(0, index));
+}
+
+console.log(rotateArray([1, 2, 3, 4, 5, 6], 2));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ZM-TASK:
 
 // Shunday function yozing, u function parametrga berilgan raqamlarni orqasiga ogirib qaytarsin.
 // MASALAN: reverseInteger(123456789) return 987654321
 
-function reverseInteger(num) {
-	return Number(num.toString().split('').reverse().join(''));
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// function reverseInteger(num) {
+// 	return Number(num.toString().split('').reverse().join(''));
+// }
 
 // ZL-TASK:
 
