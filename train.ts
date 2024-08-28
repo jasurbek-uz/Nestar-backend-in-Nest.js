@@ -1,33 +1,62 @@
+// ZO-TASK:
+
+// Shunday function yozing, u parametrdagi string ichidagi qavslar miqdori balansda
+// ekanligini aniqlasin. Ya'ni ochish("(") va yopish(")") qavslar soni bir xil bolishi kerak.
+// MASALAN: areParenthesesBalanced("string()ichida(qavslar)soni()balansda") return true
+
+
+function areParenthesesBalanced(input) {
+	let balance = 0;
+
+	for (let char of input) {
+		if (char === '(') balance++;
+		else if (char === ')') {
+			balance--;
+			if (balance < 0) return false;
+		}
+	}
+
+	return balance === 0;
+}
+
+console.log(areParenthesesBalanced("()()")); // true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ZN-TASK:
 
-// Shunday function yozing, uni array va number parametri bolsin. 
+// Shunday function yozing, uni array va number parametri bolsin.
 //Ikkinchi parametrda berilgan raqamli indexgacha arrayni orqasiga ogirib qaytarsin.
 // MASALAN: rotateArray([1, 2, 3, 4, 5, 6], 3) return [5, 6, 1, 2, 3, 4]
 
-function rotateArray(arr, index) {
-	const n = arr.length;
-	index %= n;
+// function rotateArray(arr, index) {
+// 	const n = arr.length;
+// 	index %= n;
 
-	return arr.slice(index).concat(arr.slice(0, index));
-}
+// 	return arr.slice(index).concat(arr.slice(0, index));
+// }
 
-console.log(rotateArray([1, 2, 3, 4, 5, 6], 2));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// console.log(rotateArray([1, 2, 3, 4, 5, 6], 2));
 
 // ZM-TASK:
 

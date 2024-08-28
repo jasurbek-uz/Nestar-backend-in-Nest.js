@@ -89,6 +89,6 @@ export class MemberResolver {
 	@UseGuards(RolesGuard)
 	@Query(() => Member)
 	public async updateMemberByAdmin(@Args('input') input: MemberUpdate): Promise<Member> {
-		return this.memberService.updateMemberByAdmin(input);
+		return await  this.memberService.updateMemberByAdmin(input);
 	}
 };
