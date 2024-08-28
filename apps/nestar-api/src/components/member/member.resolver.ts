@@ -32,7 +32,7 @@ export class MemberResolver {
 
 	// Authenticated users, agents, admins//
 	@UseGuards(AuthGuard)
-	@Mutation(() => String)
+	@Mutation(() => Member)
 	public async updateMember(
 		@Args('input') input: MemberUpdate,
 		@AuthMember('_id') memberId: ObjectId,
@@ -79,7 +79,7 @@ export class MemberResolver {
 	// ADMIN MANAGEMENT:Admin//
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
-	@Mutation(() => Members)
+	@Query(() => Members)
 	public async getAllMembersByAdmin(@Args('input') input: MembersInquiry): Promise<Members> {
 		console.log('Query: getAllMembersByAdmin');
 		return await this.memberService.getAllMembersByAdmin(input);
@@ -87,7 +87,7 @@ export class MemberResolver {
 
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
-	@Query(() => Member)
+	@Mutation(() => Member)
 	public async updateMemberByAdmin(@Args('input') input: MemberUpdate): Promise<Member> {
 		return await  this.memberService.updateMemberByAdmin(input);
 	}
