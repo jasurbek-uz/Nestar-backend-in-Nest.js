@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from "@nestjs/common";
 import { LoggingInterceptor } from "./libs/interceptor/Logging.interceptor";
-import {grahqlUploadExpress} from "graphql-upload"
+import {graphqlUploadExpress} from "graphql-upload"
 import * as express from "express";
 
 async function bootstrap() {
@@ -10,8 +10,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.enableCors({ origin: true, credentials: true });
-  app.use(grahqlUploadExpress({ maxFileSize: 15000000, maxFiles: 10 }));
-  app.use('/upload', express.static('./upload'));
+  app.use(graphqlUploadExpress({ maxFileSize: 15000000, maxFiles: 10 }));
+  app.use('/uploads', express.static('./uploads'));
   await app.listen(process.env.PORT_API ?? 3000);
 }
 bootstrap();
