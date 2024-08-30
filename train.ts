@@ -1,3 +1,37 @@
+
+// ZP-TASK:
+
+// shunday function yozing, u 2 ta array parametr qabul qilsin.
+// Siz bu ikki arrayning qiymatlari o'xshash bo'lishini(ya'ni, ularning barcha elementlari bir xil bo'lishini) tekshirishingiz kerak.
+
+// MASALAN: 
+console.log(areArraysEqual([1, 2, 3], [3, 1, 2])) // true
+console.log(areArraysEqual([1, 2, 3], [3, 1, 2, 1])) // true
+console.log(areArraysEqual([1, 2, 3], [4, 1, 2])) // false
+
+function areArraysEqual(arr1, arr2) {
+	if (arr1.length !== arr2.length) return false;
+
+	for (let i = 0; i < arr1.length; i++) {
+		if (arr1[i] !== arr2[i]) return false;
+	}
+
+	return true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ZO-TASK:
 
 // Shunday function yozing, u parametrdagi string ichidagi qavslar miqdori balansda
@@ -5,43 +39,21 @@
 // MASALAN: areParenthesesBalanced("string()ichida(qavslar)soni()balansda") return true
 
 
-function areParenthesesBalanced(input) {
-	let balance = 0;
+// function areParenthesesBalanced(input) {
+// 	let balance = 0;
 
-	for (let char of input) {
-		if (char === '(') balance++;
-		else if (char === ')') {
-			balance--;
-			if (balance < 0) return false;
-		}
-	}
+// 	for (let char of input) {
+// 		if (char === '(') balance++;
+// 		else if (char === ')') {
+// 			balance--;
+// 			if (balance < 0) return false;
+// 		}
+// 	}
 
-	return balance === 0;
-}
+// 	return balance === 0;
+// }
 
-console.log(areParenthesesBalanced("()()")); // true
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// console.log(areParenthesesBalanced("()()")); // true
 
 // ZN-TASK:
 
