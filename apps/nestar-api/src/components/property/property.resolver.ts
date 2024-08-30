@@ -14,9 +14,9 @@ export class PropertyResolver {
   constructor(private readonly propertyService: PropertyService) { }
 
   @Roles(MemberType.AGENT)
-   @UseGuards(RolesGuard)
+  @UseGuards(RolesGuard)
   @Mutation(()=>Property)
-  public async createProperty(@Args('input') input: PropertyInput, @AuthMember("_id") memberId: ObjectId,): Promise<Property>{
+  public async createProperty(@Args('input') input: PropertyInput, @AuthMember('_id') memberId: ObjectId,): Promise<Property>{
     console.log('Mutation: createProperty');
     input.memberId = memberId;
     return await this.propertyService.createProperty(input);

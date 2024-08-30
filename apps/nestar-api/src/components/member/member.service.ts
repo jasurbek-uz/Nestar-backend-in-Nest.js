@@ -55,7 +55,7 @@ export class MemberService {
 
 	public async updateMember(memberId: ObjectId, input: MemberUpdate): Promise<Member> {
 		const result: Member = await this.memberModel
-			.findOneAndUpdate({ _id: memberId, memberStatus: MemberStatus.ACTIVE }, input, { new: true })
+			.findByIdAndUpdate({ _id: memberId, memberStatus: MemberStatus.ACTIVE }, input, { new: true })
 			.exec();
 		if (!result) throw new InternalServerErrorException(Message.UPLOAD_FAILED);
 		result.accessToken = await this.authService.createToken(result);
@@ -147,6 +147,6 @@ export class MemberService {
     console.log('executed');
     const { _id, targetKey, modifier } = input;
     return await this.memberModel
-      .findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true },).exec();
+      .findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier }, }, { new: true }).exec();
   }
 }
