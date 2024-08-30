@@ -17,12 +17,12 @@ export class PropertyInput {
 	@IsNotEmpty()
 	@Length(3, 100)
 	@Field(() => String)
-	memberAddress: string;
+	propertyAddress: string;
 
 	@IsNotEmpty()
 	@Length(3, 100)
 	@Field(() => String)
-	memberTitle: string;
+	propertyTitle: string;
 
 	@IsNotEmpty()
 	@Field(() => Number)
