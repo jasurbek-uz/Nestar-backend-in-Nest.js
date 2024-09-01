@@ -1,7 +1,7 @@
 import {  Query, Args, Mutation, Resolver } from '@nestjs/graphql';
 import { PropertyService } from "./property.service";
-import { Property } from "../../libs/dto/property/property";
-import { PropertyInput } from "../../libs/dto/property/property.input";
+import { Properties, Property } from "../../libs/dto/property/property";
+import { AgentPropertiesInquiry, PropertiesInquiry, PropertyInput } from "../../libs/dto/property/property.input";
 import { Roles } from "../auth/decorators/roles.decorator";
 import { MemberType } from "../../libs/enums/member.enum";
 import { UseGuards } from "@nestjs/common";
@@ -11,6 +11,7 @@ import { ObjectId } from "mongoose";
 import { WithoutGuard } from "../auth/guards/without.guard";
 import { shapeIntoMongoObjectId } from "../../libs/config";
 import { PropertyUpdate } from "../../libs/dto/property/property.update";
+import { AgentsInquiry } from "../../libs/dto/member/member.input";
 
 
 @Resolver()
@@ -40,7 +41,7 @@ export class PropertyResolver {
 		return await this.propertyService.getProperty(memberId, propertyId);
 	}
 
-  @Roles(MemberType.AGENT)
+	@Roles(MemberType.AGENT)
 	@UseGuards(RolesGuard)
 	@Mutation((returns) => Property)
 	public async updateProperty(
@@ -50,5 +51,26 @@ export class PropertyResolver {
 		console.log('Mutation: updateProperty');
 		input._id = shapeIntoMongoObjectId(input._id);
 		return await this.propertyService.updateProperty(memberId, input);
+	}
+
+	@UseGuards(WithoutGuard)
+	@Query((returns) => Properties)
+	public async getProperties(
+		@Args('input') input: PropertiesInquiry,
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Properties> {
+		console.log('Query: getProperties');
+		return await this.propertyService.getProperties(memberId, input);
+	}
+
+	@Roles(MemberType.AGENT)
+	@UseGuards(RolesGuard)
+	@Query((returns) => Properties)
+	public async getAgentProperties(
+		@Args('input') input: AgentPropertiesInquiry,
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Properties> {
+		console.log('Query: getAgentProperties');
+		return await this.propertyService.getAgentProperties(memberId, input);
 	}
 }
