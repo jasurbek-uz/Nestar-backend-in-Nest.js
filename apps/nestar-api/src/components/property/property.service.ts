@@ -12,6 +12,7 @@ import { ViewService } from "../view/view.service";
 import { PropertyUpdate } from "../../libs/dto/property/property.update";
 import  * as moment from "moment";
 import { lookupMember, shapeIntoMongoObjectId } from "../../libs/config";
+import { ViewInput } from "../../libs/dto/view/view.input";
 
 @Injectable()
 export class PropertyService {
@@ -38,18 +39,18 @@ export class PropertyService {
 			_id: propertyId,
 			PropertyStatus: PropertyStatus.ACTIVE,
 		};
-		const tartgetProperty: Property = await this.propertyModel.findOne(search).lean().exec();
-		if (!tartgetProperty) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		const targetProperty: Property = await this.propertyModel.findOne(search).lean().exec();
+		if (!targetProperty) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 		if (memberId) {
-			const viewInput = { memberId: memberId, viewRefId: propertyId, viewGroup: ViewGroup.PROPERTY };
+			const viewInput:ViewInput = { memberId: memberId, viewRefId: propertyId, viewGroup: ViewGroup.PROPERTY };
 			const newView = await this.viewService.recordView(viewInput);
 			if (newView) {
 				await this.propertyStatsEditor({ _id: propertyId, targetKey: 'propertyViews', modifier: 1 });
-				tartgetProperty.propertyViews++;
+				targetProperty.propertyViews++;
 			}
 		}
-		tartgetProperty.memberData = await this.memberService.getMember(null, tartgetProperty.memberId);
-		return tartgetProperty;
+		targetProperty.memberData = await this.memberService.getMember(null, targetProperty.memberId);
+		return targetProperty;
   }
   
 	public async propertyStatsEditor(input: StatisticModifier): Promise<Property> {
