@@ -55,7 +55,7 @@ export class PropertyService {
   
 	public async propertyStatsEditor(input: StatisticModifier): Promise<Property> {
 		const { _id, targetKey, modifier } = input;
-    return await this.propertyModel.findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true })
+    return await this.propertyModel.findOneAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true })   // findOneAndUpdae
       .exec();
   }
   
@@ -69,7 +69,7 @@ export class PropertyService {
     if (propertyStatus === PropertyStatus.SOLD) soldAt = moment().toDate();
     else if (propertyStatus === PropertyStatus.DELETE) deletedAt = moment().toDate();
     const result = await this.propertyModel
-      .findOneAndUpdate(search, input, { new: true, }) // findByIdAndUpdate 
+      .findByIdAndUpdate(search, input, { new: true, })                                 // findByIdAndUpdate 
       .exec();
     if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
     if (soldAt || deletedAt) {
@@ -82,7 +82,7 @@ export class PropertyService {
     return result;
   }
 
-  public async getProperties(memberId: ObjectId, input: PropertiesInquiry): Promise<Properties>{
+  public async getProperties(memberId: ObjectId, input: PropertiesInquiry): Promise<Properties>{  // memberId
     const match: T = { PropertyStatus: PropertyStatus.ACTIVE };
     const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
     this.shapeMatchQuery(match, input);
@@ -112,8 +112,9 @@ export class PropertyService {
   private shapeMatchQuery(match: T, input: PropertiesInquiry): void{
     const { memberId, locationList, roomsList, bedsList, typeList, periodsRange, pricesRange, squaresRange, options, text, } = input.search;
     if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
-    if (locationList) match.propertyRooms = { $in: roomsList };
-    if (roomsList) match.propertyBed = { $in: bedsList };
+    if (locationList) match.propertyLocationn = { $in: locationList };
+    if (roomsList)  match.propertyRooms = { $in: roomsList };
+    if (bedsList) match.propertyBeds = { $in: bedsList };
     if (typeList) match.propertyType = { $in: typeList };
     if (pricesRange) match.propertyPrice = { $gte: pricesRange.start, $lte: pricesRange.end };
     if (periodsRange) match.createdAt = { $gte: periodsRange.start, $lte: periodsRange.end };
@@ -180,7 +181,7 @@ export class PropertyService {
 				},
 			])
 			.exec();
-		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		if (!result) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 		return result[0];
   }
 
