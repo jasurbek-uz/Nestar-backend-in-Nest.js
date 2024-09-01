@@ -42,7 +42,7 @@ export class PropertyService {
 		const targetProperty: Property = await this.propertyModel.findOne(search).lean().exec();
 		if (!targetProperty) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 		if (memberId) {
-			const viewInput:ViewInput = { memberId: memberId, viewRefId: propertyId, viewGroup: ViewGroup.PROPERTY };
+			const viewInput = { memberId: memberId, viewRefId: propertyId, viewGroup: ViewGroup.PROPERTY };
 			const newView = await this.viewService.recordView(viewInput);
 			if (newView) {
 				await this.propertyStatsEditor({ _id: propertyId, targetKey: 'propertyViews', modifier: 1 });
@@ -55,7 +55,7 @@ export class PropertyService {
   
 	public async propertyStatsEditor(input: StatisticModifier): Promise<Property> {
 		const { _id, targetKey, modifier } = input;
-    return await this.propertyModel.findOneAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true })   // findOneAndUpdae
+    return await this.propertyModel.findOneAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true }) // findByIdAndUpdate Bekzod akani darsida  
       .exec();
   }
   
@@ -69,7 +69,7 @@ export class PropertyService {
     if (propertyStatus === PropertyStatus.SOLD) soldAt = moment().toDate();
     else if (propertyStatus === PropertyStatus.DELETE) deletedAt = moment().toDate();
     const result = await this.propertyModel
-      .findByIdAndUpdate(search, input, { new: true, })                                 // findByIdAndUpdate 
+      .findOneAndUpdate(search, input, { new: true, })                                
       .exec();
     if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
     if (soldAt || deletedAt) {
@@ -83,7 +83,7 @@ export class PropertyService {
   }
 
   public async getProperties(memberId: ObjectId, input: PropertiesInquiry): Promise<Properties>{  // memberId
-    const match: T = { PropertyStatus: PropertyStatus.ACTIVE };
+    const match: T = { propertyStatus: PropertyStatus.ACTIVE };
     const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
     this.shapeMatchQuery(match, input);
     console.log('match:', match);
@@ -158,7 +158,7 @@ export class PropertyService {
   }
 
   public async getAllPropertiesByAdmin(input: AllPropertiesInquiry): Promise<Properties> {
-    const { propertyStatus, propertyLocationList } = input.search;
+    const { propertyStatus, propertyLocationList } = input.search; // destruction
     const match: T = {}
     const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
     if (propertyStatus) match.propertyStatus = propertyStatus;
