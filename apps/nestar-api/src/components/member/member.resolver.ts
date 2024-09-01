@@ -95,6 +95,7 @@ export class MemberResolver {
 		return await this.memberService.updateMemberByAdmin(input);
 	}
 
+	// IMAGE UPLOAD API //
 	@UseGuards(AuthGuard)
 	@Mutation((returns) => String)
 	public async imageUploader(

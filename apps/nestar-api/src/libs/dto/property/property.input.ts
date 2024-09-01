@@ -50,7 +50,7 @@ export class PropertyInput {
 	@Field(() => [String])
 	propertyImages: string[];
 
-	@IsNotEmpty()
+	@IsOptional() // error
 	@Length(5, 500)
 	@Field(() => String, { nullable: true })
 	propertyDesc?: string;

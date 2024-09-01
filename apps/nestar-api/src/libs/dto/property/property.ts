@@ -52,7 +52,7 @@ export class Property {
   propertyImages: string[];
 
   @Field(() => String, { nullable: true })
-  propertyDesc?: string;
+  propertyDesc?: string[]; // xato
 
   @Field(() => Boolean)
   propertyBarter: boolean;
