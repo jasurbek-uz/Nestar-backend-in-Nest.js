@@ -38,10 +38,8 @@ export class PropertyService {
 			_id: propertyId,
 			PropertyStatus: PropertyStatus.ACTIVE,
 		};
-
 		const tartgetProperty: Property = await this.propertyModel.findOne(search).lean().exec();
 		if (!tartgetProperty) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-
 		if (memberId) {
 			const viewInput = { memberId: memberId, viewRefId: propertyId, viewGroup: ViewGroup.PROPERTY };
 			const newView = await this.viewService.recordView(viewInput);
@@ -50,11 +48,10 @@ export class PropertyService {
 				tartgetProperty.propertyViews++;
 			}
 		}
-
 		tartgetProperty.memberData = await this.memberService.getMember(null, tartgetProperty.memberId);
 		return tartgetProperty;
-	}
-
+  }
+  
 	public async propertyStatsEditor(input: StatisticModifier): Promise<Property> {
 		const { _id, targetKey, modifier } = input;
     return await this.propertyModel.findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true })
@@ -67,15 +64,12 @@ export class PropertyService {
       memberId: memberId,
       propertyStatus: PropertyStatus.ACTIVE,
     };
-
     if (propertyStatus === PropertyStatus.SOLD) soldAt = moment().toDate();
     else if (propertyStatus === PropertyStatus.DELETE) deletedAt = moment().toDate();
-
     const result = await this.propertyModel
       .findOneAndUpdate(search, input, { new: true, })
       .exec();
     if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
-    
     if (soldAt || deletedAt) {
       await this.memberService.memberStatsEditor({
         _id: memberId,
@@ -83,17 +77,14 @@ export class PropertyService {
         modifier: -1,
       });
     }
-
     return result;
   }
 
   public async getProperties(memberId: ObjectId, input: PropertiesInquiry): Promise<Properties>{
     const match: T = { PropertyStatus: PropertyStatus.ACTIVE };
     const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
-
     this.shapeMatchQuery(match, input);
     console.log('match:', match);
-
     const result = await this.propertyModel
       .aggregate([
         { $match: match },
@@ -136,13 +127,11 @@ export class PropertyService {
   public async getAgentProperties(memberId: ObjectId, input: AgentPropertiesInquiry): Promise<Properties>{
     const { propertyStatus } = input.search;
     if (propertyStatus === PropertyStatus.DELETE) throw new BadRequestException(Message.NOT_ALLOWED_REQUEST);
-
     const match: T = {
       memberId: memberId,
       propertyStatus: propertyStatus ?? { $ne: PropertyStatus.DELETE },
     };
-    const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
-
+    const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC }
     const result = await this.propertyModel
 			.aggregate([
 				{ $match: match },
@@ -169,10 +158,8 @@ export class PropertyService {
     const { propertyStatus, propertyLocationList } = input.search;
     const match: T = {}
     const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
-
     if (propertyStatus) match.propertyStatus = propertyStatus;
     if (propertyLocationList) match.propertyLocation = { $in: propertyLocationList };
-
     const result = await this.propertyModel
 			.aggregate([
 				{ $match: match },
@@ -193,5 +180,30 @@ export class PropertyService {
 			.exec();
 		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 		return result[0];
+  }
+
+  public async updatePropertyByAdmin(input: PropertyUpdate): Promise<Property> {
+    let { propertyStatus, soldAt, deletedAt } = input;
+    const search: T = {
+      _id: input._id,
+      propertyStatus: PropertyStatus.ACTIVE,
+    };
+    if (propertyStatus === PropertyStatus.SOLD) soldAt = moment().toDate();
+    else if (propertyStatus === PropertyStatus.DELETE) deletedAt = moment().toDate();
+
+    const result = await this.propertyModel
+      .findOneAndUpdate(search, input, {
+        new: true,
+      })
+      .exec();
+    if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+    if (soldAt || deletedAt) {
+      await this.memberService.memberStatsEditor({
+        _id: result.memberId,
+        targetKey: 'memberProperties',
+        modifier: -1,
+      });
+    }
+    return result;
   }
 }
