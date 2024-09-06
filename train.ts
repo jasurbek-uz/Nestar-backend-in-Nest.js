@@ -1,36 +1,55 @@
 
+// ZQ-TASK:
+
+// Shunday function yozing, u parametridagi array ichida 2 marta qaytarilgan sonlarni alohida araryda qaytarsin.
+// MASALAN: findDuplicates([1,2,3,4,5,4,3,4]) return [3, 4]
+
+
+function findDuplicates(arr: number[]): number[] {
+	return arr.filter((num, i) => arr.indexOf(num) !== i);
+}
+
+console.log(findDuplicates([1, 2, 3, 4, 5, 4, 3, 4]));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ZP-TASK:
 
 // shunday function yozing, u 2 ta array parametr qabul qilsin.
 // Siz bu ikki arrayning qiymatlari o'xshash bo'lishini(ya'ni, ularning barcha elementlari bir xil bo'lishini) tekshirishingiz kerak.
 
 // MASALAN: 
-console.log(areArraysEqual([1, 2, 3], [3, 1, 2])) // true
-console.log(areArraysEqual([1, 2, 3], [3, 1, 2, 1])) // true
-console.log(areArraysEqual([1, 2, 3], [4, 1, 2])) // false
+// console.log(areArraysEqual([1, 2, 3], [3, 1, 2])) // true
+// console.log(areArraysEqual([1, 2, 3], [3, 1, 2, 1])) // true
+// console.log(areArraysEqual([1, 2, 3], [4, 1, 2])) // false
 
-function areArraysEqual(arr1, arr2) {
-	if (arr1.length !== arr2.length) return false;
+// function areArraysEqual(arr1, arr2) {
+// 	if (arr1.length !== arr2.length) return false;
 
-	for (let i = 0; i < arr1.length; i++) {
-		if (arr1[i] !== arr2[i]) return false;
-	}
+// 	for (let i = 0; i < arr1.length; i++) {
+// 		if (arr1[i] !== arr2[i]) return false;
+// 	}
 
-	return true;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
+// 	return true;
+// }
 
 // ZO-TASK:
 
