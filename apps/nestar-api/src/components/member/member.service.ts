@@ -82,9 +82,12 @@ export class MemberService {
 			const newView = await this.viewService.recordView(viewInput);
 			// increase memberView
 			if (newView) {
-				await this.memberModel.findOneAndUpdate(search, { $inc: { memberViews: 1 } }, { new: true }).exec();
+        await this.memberModel.findOneAndUpdate(search, { $inc: { memberViews: 1 } }, { new: true }).exec();
+        targetMember.memberViews++;
 			}
-			targetMember.memberViews++;
+      //meliked
+      const likeInput = { memberId: memberId, likeRefId: targetId, LikeGroup: LikeGroup.MEMBER }
+      targetMember.meLiked = await this.likeService.checkLikeExistence(likeInput);
 		}
 		return targetMember;
   }
