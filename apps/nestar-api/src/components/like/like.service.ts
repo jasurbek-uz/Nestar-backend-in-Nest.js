@@ -7,4 +7,6 @@ import { InjectModel } from "@nestjs/mongoose";
 export class LikeService {
   constructor(@InjectModel('Like') private readonly memberModel: Model<Like>) { }
   
+
+  
 }
