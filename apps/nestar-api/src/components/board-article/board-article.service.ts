@@ -148,11 +148,9 @@ public async likeTargetBoardArticle(memberId: ObjectId, likeRefId: ObjectId): Pr
   
 
 	public async getAllBoardArticlesByAdmin(input: AllBoardArticlesInquiry): Promise<BoardArticles> {
-		const { articleStatus, articleCategory } = input.search;
+		const {articleCategory, articleStatus  } = input.search;
 		const match: T = {};
-		const sort: T = {
-			[input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC,
-		};
+		const sort: T = {[input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC};
 
 		if (articleStatus) match.articleStatus = articleStatus;
 		if (articleCategory) match.articleCategory = articleCategory;
@@ -175,9 +173,7 @@ public async likeTargetBoardArticle(memberId: ObjectId, likeRefId: ObjectId): Pr
 			])
 			.exec();
 
-		if (!result.length) {
-			throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-		}
+		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND)
 
 		return result[0];
 	}
