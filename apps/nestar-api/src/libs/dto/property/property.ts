@@ -81,7 +81,6 @@ export class Property {
   
   //** from aggregation */
 
-  // from aggregation
   @Field(() => [MeLiked], { nullable: true })
   meLiked?: MeLiked[];
 

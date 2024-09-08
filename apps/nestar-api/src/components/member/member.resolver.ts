@@ -80,7 +80,7 @@ export class MemberResolver {
   }
   
   @UseGuards(AuthGuard)
-  @Mutation(() => Member)
+  @Mutation(() => Member)// UnAuntihanticated members // royhatdan otmagan azolarni ham like bosadi
   public async likeTargetMember(@Args("memberId") input: string, @AuthMember('_id') memberId: ObjectId,): Promise<Member>{
     console.log('Mutation: likeTargetMember');
     const likeRefId = shapeIntoMongoObjectId(input);

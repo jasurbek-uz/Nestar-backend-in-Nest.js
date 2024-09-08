@@ -1,42 +1,60 @@
+// ZS-TASK:
+
+// Shunday function yozing, u parametridagi arrayni ichidagi 1 marta kelgan elemnetni qaytarsin.
+// MASALAN: singleNumber([4, 2, 1, 2, 1]) return 4
+
+function singleNumber(nums) {
+  let result = 0;
+  for (let num of nums) {
+    result ^= num; 
+  }
+  return result;
+}
+
+console.log(singleNumber([4, 2, 1, 2, 1])); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ZQ-TASK:
 
 // Shunday function yozing, u parametridagi array ichida 2 marta qaytarilgan sonlarni alohida araryda qaytarsin.
 // MASALAN: findDuplicates([1,2,3,4,5,4,3,4]) return [3, 4]
 
+// function findDuplicates(arr: number[]): number[] {
+// 	return arr.filter((num, i) => arr.indexOf(num) !== i);
+// }
 
-function findDuplicates(arr: number[]): number[] {
-	return arr.filter((num, i) => arr.indexOf(num) !== i);
-}
-
-console.log(findDuplicates([1, 2, 3, 4, 5, 4, 3, 4]));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// console.log(findDuplicates([1, 2, 3, 4, 5, 4, 3, 4]));
 
 // ZP-TASK:
 
 // shunday function yozing, u 2 ta array parametr qabul qilsin.
 // Siz bu ikki arrayning qiymatlari o'xshash bo'lishini(ya'ni, ularning barcha elementlari bir xil bo'lishini) tekshirishingiz kerak.
 
-// MASALAN: 
+// MASALAN:
 // console.log(areArraysEqual([1, 2, 3], [3, 1, 2])) // true
 // console.log(areArraysEqual([1, 2, 3], [3, 1, 2, 1])) // true
 // console.log(areArraysEqual([1, 2, 3], [4, 1, 2])) // false
@@ -56,7 +74,6 @@ console.log(findDuplicates([1, 2, 3, 4, 5, 4, 3, 4]));
 // Shunday function yozing, u parametrdagi string ichidagi qavslar miqdori balansda
 // ekanligini aniqlasin. Ya'ni ochish("(") va yopish(")") qavslar soni bir xil bolishi kerak.
 // MASALAN: areParenthesesBalanced("string()ichida(qavslar)soni()balansda") return true
-
 
 // function areParenthesesBalanced(input) {
 // 	let balance = 0;

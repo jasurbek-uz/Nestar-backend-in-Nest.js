@@ -6,6 +6,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { AuthModule } from "../auth/auth.module";
 import { MemberModule } from "../member/member.module";
 import { ViewModule } from "../view/view.module";
+import { LikeModule } from "../like/like.module";
 
 
 @Module({
@@ -13,7 +14,8 @@ import { ViewModule } from "../view/view.module";
     MongooseModule.forFeature([{ name: 'BoardArticle', schema: BoardArticleSchema }]),
     AuthModule,
     MemberModule,
-    ViewModule
+    ViewModule,
+    LikeModule
 	],
   providers: [BoardArticleResolver, BoardArticleService],
   exports: [BoardArticleService],

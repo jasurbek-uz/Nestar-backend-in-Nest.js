@@ -52,7 +52,7 @@ export class PropertyService {
 				targetProperty.propertyViews++;
       }
       //meliked
-       const likeInput = { memberId: memberId, likeRefId: propertyId, LikeGroup: LikeGroup.PROPERTY };
+       const likeInput = { memberId: memberId, likeRefId: propertyId, likeGroup: LikeGroup.PROPERTY };
 				targetProperty.meLiked = await this.likeService.checkLikeExistence(likeInput);
 		}
 		targetProperty.memberData = await this.memberService.getMember(null, targetProperty.memberId);
@@ -178,7 +178,7 @@ export class PropertyService {
 		};
 
 		const modifier: number = await this.likeService.toggleLike(input);
-		const result = await this.propertyStatsEditor({ _id: likeRefId, targetKey: 'propertyLikes', modifier });
+		const result = await this.propertyStatsEditor({ _id: likeRefId, targetKey: 'propertyLikes', modifier:modifier });
 
 		if (!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
 		return result;
