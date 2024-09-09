@@ -12,4 +12,4 @@
 // Vlidation : Backend Validation, Frontend Validation, Database validation
 
 //  @Module decorator proprties: providers, controllers, exports, imports
-//  // Property => 
+//  // Property =>  githubdab shu ozgarish vscodega otish kerek 
