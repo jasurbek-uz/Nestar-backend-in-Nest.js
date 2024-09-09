@@ -7,9 +7,15 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { BoardArticle, BoardArticles } from '../../libs/dto/board-article/board-article';
 import {
+<<<<<<< HEAD
   AllBoardArticlesInquiry,
   BoardArticleInput,
   BoardArticlesInquiry,
+=======
+	AllBoardArticlesInquiry,
+	BoardArticleInput,
+	BoardArticlesInquiry,
+>>>>>>> 40b01bfd3fad63a473e44a9aaef61625177db6a0
 } from '../../libs/dto/board-article/board-article.input';
 import { AuthMember } from '../auth/decorators/authMember.decorator';
 import { ObjectId } from 'mongoose';
@@ -77,6 +83,21 @@ export class BoardArticleResolver {
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
 	@Mutation((returns) => BoardArticle)
+<<<<<<< HEAD
+=======
+	public async updateBoardArticleByAdmin(
+		@Args('input')
+		input: BoardArticleUpdate,
+	): Promise<BoardArticle> {
+		console.log('Mutation: updateBoardArticleByAdmin');
+		input._id = shapeIntoMongoObjectId(input._id);
+		return await this.boardArticleService.updateBoardArticleByAdmin(input);
+	}
+
+	@Roles(MemberType.ADMIN)
+	@UseGuards(RolesGuard)
+	@Mutation((returns) => BoardArticle)
+>>>>>>> 40b01bfd3fad63a473e44a9aaef61625177db6a0
 	public async removeBoardArticleByAdmin(@Args('articleId') input: string): Promise<BoardArticle> {
 		console.log('Mutation: removeBoardArticleByAdmin');
 		const articleId = shapeIntoMongoObjectId(input);
