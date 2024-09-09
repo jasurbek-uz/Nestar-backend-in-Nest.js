@@ -110,6 +110,6 @@ export class PropertyResolver {
 	public async removePropertyByAdmin(@Args('propertyId') input: string): Promise<Property> {
 		console.log('Mutation: removePropertyByAdmin');
 		const propertyId = shapeIntoMongoObjectId(input);
-		return await this.propertyService.removePropertyByAdmi(propertyId);
+		return await this.propertyService.removePropertyByAdmin(propertyId);
 	}
 }
