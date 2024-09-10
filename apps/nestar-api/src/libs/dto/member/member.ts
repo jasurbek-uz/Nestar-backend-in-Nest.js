@@ -2,6 +2,7 @@ import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { MemberAuthType, MemberStatus, MemberType } from "../../enums/member.enum";
 import { ObjectId } from "mongoose";
 import { MeLiked } from "../like/like";
+import { MeFollowed } from "../follow/follow";
 
 
 @ObjectType()
@@ -78,15 +79,19 @@ export class Member {
 	createdAt?: Date;
 
 	@Field(() => Date)
-  updatedAt?: Date;
-  
-  @Field(() => String, { nullable: true })
-  accessToken?: string;
+	updatedAt?: Date;
 
-  // from aggregation
-  @Field(() => [MeLiked], { nullable: true })
-  meLiked?: MeLiked[];
+	@Field(() => String, { nullable: true })
+	accessToken?: string;
+
+	// from aggregation
+	@Field(() => [MeLiked], { nullable: true })
+	meLiked?: MeLiked[];
+
+	@Field(() => [MeFollowed], { nullable: true })
+	meFollowed?: MeFollowed[];
 }
+
 
 @ObjectType()
 export class TotalCounter{

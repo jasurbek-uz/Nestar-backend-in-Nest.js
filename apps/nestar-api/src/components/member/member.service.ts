@@ -13,14 +13,16 @@ import { ViewGroup } from "../../libs/enums/view.enum";
 import { LikeInput } from "../../libs/dto/like/like.input";
 import { LikeGroup } from "../../libs/enums/like.enum";
 import { LikeService } from "../like/like.service";
+import { Follower, Following, MeFollowed } from "../../libs/dto/follow/follow";
 
 @Injectable()
 export class MemberService {
 	constructor(
 		@InjectModel('Member') private readonly memberModel: Model<Member>,
+		@InjectModel('Follow') private readonly followModel: Model<Follower | Following>,
 		private authService: AuthService,
-    private viewService: ViewService,
-    private likeService: LikeService,
+		private viewService: ViewService,
+		private likeService: LikeService,
 	) {}
 
 	public async signup(input: MemberInput): Promise<Member> {
@@ -82,16 +84,18 @@ export class MemberService {
 			const newView = await this.viewService.recordView(viewInput);
 			// increase memberView
 			if (newView) {
-        await this.memberModel.findOneAndUpdate(search, { $inc: { memberViews: 1 } }, { new: true }).exec();
-        targetMember.memberViews++;
+				await this.memberModel.findOneAndUpdate(search, { $inc: { memberViews: 1 } }, { new: true }).exec();
+				targetMember.memberViews++;
 			}
-      //meliked
-      const likeInput = { memberId: memberId, likeRefId: targetId, likeGroup: LikeGroup.MEMBER }
+			//meliked
+			const likeInput = { memberId: memberId, likeRefId: targetId, likeGroup: LikeGroup.MEMBER };
       targetMember.meLiked = await this.likeService.checkLikeExistence(likeInput);
+      
+      //mefollowed
+      targetMember.meFollowed = await this.checkSubscription(memberId, targetId);
 		}
 		return targetMember;
-  }
-  
+	}
 
 	public async getAgents(memberId: ObjectId, input: AgentsInquiry): Promise<Members> {
 		const { text } = input.search;
@@ -116,35 +120,32 @@ export class MemberService {
 		console.log('result:', result);
 		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 		return result[0];
-  }
-  
+	}
 
- public async likeTargetMember(memberId: ObjectId, likeRefId:ObjectId): Promise<Member>{
-    const target: Member = await this.memberModel.findOne({ _id: likeRefId, memberStatus: MemberStatus.ACTIVE }).exec();
-    if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+	public async likeTargetMember(memberId: ObjectId, likeRefId: ObjectId): Promise<Member> {
+		const target: Member = await this.memberModel.findOne({ _id: likeRefId, memberStatus: MemberStatus.ACTIVE }).exec();
+		if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
-    const input: LikeInput = {
-      memberId: memberId,
-      likeRefId: likeRefId,
-      likeGroup: LikeGroup.MEMBER
-    };
+		const input: LikeInput = {
+			memberId: memberId,
+			likeRefId: likeRefId,
+			likeGroup: LikeGroup.MEMBER,
+		};
 
-    const modifier: number = await this.likeService.toggleLike(input);
-    const result = await this.memberStatsEditor({ _id: likeRefId, targetKey: "memberLikes", modifier:modifier });
+		const modifier: number = await this.likeService.toggleLike(input);
+		const result = await this.memberStatsEditor({ _id: likeRefId, targetKey: 'memberLikes', modifier: modifier });
 
-    if (!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
-    return result;
-  }
-
+		if (!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
+		return result;
+	}
 
 	public async getAllMembersByAdmin(input: MembersInquiry): Promise<Members> {
-   
-    const { memberStatus, memberType, text } = input.search;
-		const match: T = { };
+		const { memberStatus, memberType, text } = input.search;
+		const match: T = {};
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
-    if (memberStatus) match.MemberStatus = memberStatus;
-    if (memberType) match.memberType = memberType;
+		if (memberStatus) match.MemberStatus = memberStatus;
+		if (memberType) match.memberType = memberType;
 		if (text) match.memberNick = { $regex: new RegExp(text, 'i') };
 		console.log('match:', match);
 
@@ -165,16 +166,20 @@ export class MemberService {
 		return result[0];
 	}
 
-  public async updateMemberByAdmin(input: MemberUpdate): Promise<Member> {
-    const result: Member = await this.memberModel.findByIdAndUpdate({ _id: input._id }, input, { new: true }).exec();
-    if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
-    return result;
+	public async updateMemberByAdmin(input: MemberUpdate): Promise<Member> {
+		const result: Member = await this.memberModel.findByIdAndUpdate({ _id: input._id }, input, { new: true }).exec();
+		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+		return result;
   }
   
-  public async memberStatsEditor(input: StatisticModifier): Promise<Member>{
-    console.log('executed');
-    const { _id, targetKey, modifier } = input;
-    return await this.memberModel
-      .findOneAndUpdate(_id, { $inc: { [targetKey]: modifier }, }, { new: true }).exec();
+  private async checkSubscription(followerId: ObjectId, followingId: ObjectId): Promise<MeFollowed[]> {
+    const result = await this.followModel.findOne({ followingId: followingId, followerId: followerId }).exec();
+    return result ? [{ followingId: followingId, followerId: followerId, myFollowing: true }] : [];
   }
+
+	public async memberStatsEditor(input: StatisticModifier): Promise<Member> {
+		console.log('executed');
+		const { _id, targetKey, modifier } = input;
+		return await this.memberModel.findOneAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true }).exec();
+	}
 }
