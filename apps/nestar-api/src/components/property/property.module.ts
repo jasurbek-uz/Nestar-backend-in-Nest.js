@@ -13,8 +13,8 @@ import { LikeModule } from "../like/like.module";
 		MongooseModule.forFeature([{ name: 'Property', schema: PropertySchema }]),
 		AuthModule,
 		ViewModule,
-    MemberModule,
-    LikeModule
+		MemberModule,
+		LikeModule,
 	],
 	providers: [PropertyResolver, PropertyService],
 	exports: [PropertyService],
