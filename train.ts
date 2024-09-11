@@ -1,43 +1,59 @@
+
+// ZT-TASK:
+
+// Shunday function yozing, u parametridagi string ichida 1 martadan ortiq qaytarilmagan birinchi harf indeksini qaytarsin.
+// MASALAN: firstUniqueCharIndex(“stamp”) return 0
+
+
+function firstUniqueCharIndex(s: string): number {
+	const counts = {};
+
+	for (const char of s) {
+		counts[char] = (counts[char] || 0) + 1;
+	}
+
+	for (let i = 0; i < s.length; i++) {
+		if (counts[s[i]] === 1) {
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+console.log(firstUniqueCharIndex('stamp'));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ZS-TASK:
 
 // Shunday function yozing, u parametridagi arrayni ichidagi 1 marta kelgan elemnetni qaytarsin.
 // MASALAN: singleNumber([4, 2, 1, 2, 1]) return 4
 
-function singleNumber(nums) {
-  let result = 0;
-  for (let num of nums) {
-    result ^= num; 
-  }
-  return result;
-}
+// function singleNumber(nums) {
+//   let result = 0;
+//   for (let num of nums) {
+//     result ^= num; 
+//   }
+//   return result;
+// }
 
-console.log(singleNumber([4, 2, 1, 2, 1])); 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// console.log(singleNumber([4, 2, 1, 2, 1]));
 // ZQ-TASK:
 
 // Shunday function yozing, u parametridagi array ichida 2 marta qaytarilgan sonlarni alohida araryda qaytarsin.
