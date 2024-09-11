@@ -1,12 +1,17 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { InjectModel } from "@nestjs/mongoose";
-import { Model, ObjectId } from "mongoose";
-import { Follower, Followers, Following, Followings } from "../../libs/dto/follow/follow";
-import { MemberService } from "../member/member.service";
-import { Direction, Message } from "../../libs/enums/common.enum";
-import { FollowInquiry } from "../../libs/dto/follow/follow.input";
-import { T } from "../../libs/types/common";
-import { lookupAuthMemberFollowed, lookupAuthMemberLiked, lookupFollowerData, lookupFollowingData } from "../../libs/config";
+import { InjectModel } from '@nestjs/mongoose';
+import { Follower, Followers, Following, Followings } from '../../libs/dto/follow/follow';
+import { MemberService } from '../member/member.service';
+import { Model, ObjectId } from 'mongoose';
+import { Direction, Message } from '../../libs/enums/common.enum';
+import { FollowInquiry } from '../../libs/dto/follow/follow.input';
+import { T } from '../../libs/types/common';
+import {
+	lookupAuthMemberFollowed,
+	lookupAuthMemberLiked,
+	lookupFollowerData,
+	lookupFollowingData,
+} from '../../libs/config';
 
 @Injectable()
 export class FollowService {
@@ -17,7 +22,6 @@ export class FollowService {
 
 	public async subscribe(followerId: ObjectId, followingId: ObjectId): Promise<Follower> {
 		if (followerId.toString() === followingId.toString()) {
-			// 2ta objectni bir biriga solishtiryapomiz
 			throw new InternalServerErrorException(Message.SELF_SUBSCRIPTION_DENIED);
 		}
 
@@ -39,7 +43,7 @@ export class FollowService {
 				followerId: followerId,
 			});
 		} catch (err) {
-			console.log('Error, Service.Model:', err.message);
+			console.log('Error, Service.model:', err.message);
 			throw new BadRequestException(Message.CREATE_FAILED);
 		}
 	}
@@ -75,11 +79,10 @@ export class FollowService {
 						list: [
 							{ $skip: (page - 1) * limit },
 							{ $limit: limit },
-							//meliked
+							//meLiked
 							lookupAuthMemberLiked(memberId, '$followingId'),
-							//meFollowed yan i followed others
+							//meFollowed
 							lookupAuthMemberFollowed({ followerId: memberId, followingId: '$followingId' }),
-
 							lookupFollowingData,
 							{ $unwind: '$followingData' },
 						],
@@ -88,9 +91,7 @@ export class FollowService {
 				},
 			])
 			.exec();
-		if (!result) {
-			throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-		}
+		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
 		return result[0];
 	}
