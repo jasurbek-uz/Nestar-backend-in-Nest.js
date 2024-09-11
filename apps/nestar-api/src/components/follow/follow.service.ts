@@ -16,7 +16,8 @@ export class FollowService {
 	) {}
 
 	public async subscribe(followerId: ObjectId, followingId: ObjectId): Promise<Follower> {
-		if (followerId.toString() === followingId.toString()) { // 2ta objectni bir biriga solishtiryapomiz 
+		if (followerId.toString() === followingId.toString()) {
+			// 2ta objectni bir biriga solishtiryapomiz
 			throw new InternalServerErrorException(Message.SELF_SUBSCRIPTION_DENIED);
 		}
 
@@ -73,12 +74,12 @@ export class FollowService {
 					$facet: {
 						list: [
 							{ $skip: (page - 1) * limit },
-              { $limit: limit },
-              //meliked
-              lookupAuthMemberLiked(memberId, '$followingId'),
-              //meFollowed yan i followed others
+							{ $limit: limit },
+							//meliked
+							lookupAuthMemberLiked(memberId, '$followingId'),
+							//meFollowed yan i followed others
 							lookupAuthMemberFollowed({ followerId: memberId, followingId: '$followingId' }),
-							
+
 							lookupFollowingData,
 							{ $unwind: '$followingData' },
 						],
@@ -87,7 +88,9 @@ export class FollowService {
 				},
 			])
 			.exec();
-    if (!result) { throw new InternalServerErrorException(Message.NO_DATA_FOUND) };
+		if (!result) {
+			throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		}
 
 		return result[0];
 	}
@@ -95,6 +98,7 @@ export class FollowService {
 	public async getMemberFollowers(memberId: ObjectId, input: FollowInquiry): Promise<Followers> {
 		const { page, limit, search } = input;
 		if (!search?.followingId) throw new InternalServerErrorException(Message.BAD_REQUEST);
+
 		const match: T = { followingId: search?.followingId };
 		console.log('match:', match);
 
@@ -106,11 +110,10 @@ export class FollowService {
 					$facet: {
 						list: [
 							{ $skip: (page - 1) * limit },
-              { $limit: limit },
-              //i liked
-              lookupAuthMemberLiked(memberId, '$followerId'),
-              // i followed
-              lookupAuthMemberFollowed({followerId:memberId, followingId: '$followerId'}),
+							{ $limit: limit },
+							lookupAuthMemberLiked(memberId, '$followerId'),
+							//meFollowed
+							lookupAuthMemberFollowed({ followerId: memberId, followingId: '$followerId' }),
 							lookupFollowerData,
 							{ $unwind: '$followerData' },
 						],
@@ -119,7 +122,7 @@ export class FollowService {
 				},
 			])
 			.exec();
-    if (!result) { throw new InternalServerErrorException(Message.NO_DATA_FOUND) };
+		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
 		return result[0];
 	}
