@@ -16,7 +16,7 @@ export class FollowService {
 	) {}
 
 	public async subscribe(followerId: ObjectId, followingId: ObjectId): Promise<Follower> {
-		if (followerId.toString() === followingId.toString()) {
+		if (followerId.toString() === followingId.toString()) { // 2ta objectni bir biriga solishtiryapomiz 
 			throw new InternalServerErrorException(Message.SELF_SUBSCRIPTION_DENIED);
 		}
 
@@ -54,7 +54,7 @@ export class FollowService {
 		if (!result) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
 		await this.memberService.memberStatsEditor({ _id: followerId, targetKey: 'memberFollowings', modifier: -1 });
-		await this.memberService.memberStatsEditor({ _id: followerId, targetKey: 'memberFollowers', modifier: -1 });
+		await this.memberService.memberStatsEditor({ _id: followingId, targetKey: 'memberFollowers', modifier: -1 });
 
 		return result;
 	}
@@ -73,10 +73,12 @@ export class FollowService {
 					$facet: {
 						list: [
 							{ $skip: (page - 1) * limit },
-							{ $limit: limit },
-							lookupAuthMemberLiked(memberId, '$followingId'),
+              { $limit: limit },
+              //meliked
+              lookupAuthMemberLiked(memberId, '$followingId'),
+              //meFollowed yan i followed others
 							lookupAuthMemberFollowed({ followerId: memberId, followingId: '$followingId' }),
-							//meFollowed yan i followed others
+							
 							lookupFollowingData,
 							{ $unwind: '$followingData' },
 						],
@@ -104,11 +106,13 @@ export class FollowService {
 					$facet: {
 						list: [
 							{ $skip: (page - 1) * limit },
-							{ $limit: limit },
+              { $limit: limit },
+              //i liked
               lookupAuthMemberLiked(memberId, '$followerId'),
+              // i followed
               lookupAuthMemberFollowed({followerId:memberId, followingId: '$followerId'}),
 							lookupFollowerData,
-							{ $unwind: '$followingId' },
+							{ $unwind: '$followerData' },
 						],
 						metaCounter: [{ $count: 'total' }],
 					},

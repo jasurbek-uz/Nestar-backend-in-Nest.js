@@ -96,7 +96,14 @@ export class MemberService {
       targetMember.meFollowed = await this.checkSubscription(memberId, targetId);
 		}
 		return targetMember;
-	}
+  }
+  
+
+ private async checkSubscription(followerId: ObjectId, followingId: ObjectId): Promise<MeFollowed[]> {
+    const result = await this.followModel.findOne({ followingId: followingId, followerId: followerId }).exec();
+    return result ? [{followerId: followerId, followingId: followingId,  myFollowing: true }] : [];
+  }
+
 
 	public async getAgents(memberId: ObjectId, input: AgentsInquiry): Promise<Members> {
 		const { text } = input.search;
@@ -114,6 +121,7 @@ export class MemberService {
 					$facet: {
             list: [{ $skip: (input.page - 1) * input.limit },
               { $limit: input.limit },
+              //meliked
               lookupAuthMemberLiked(memberId),
             ],
            
@@ -177,10 +185,7 @@ export class MemberService {
 		return result;
   }
   
-  private async checkSubscription(followerId: ObjectId, followingId: ObjectId): Promise<MeFollowed[]> {
-    const result = await this.followModel.findOne({ followingId: followingId, followerId: followerId }).exec();
-    return result ? [{ followingId: followingId, followerId: followerId, myFollowing: true }] : [];
-  }
+ 
 
 	public async memberStatsEditor(input: StatisticModifier): Promise<Member> {
 		console.log('executed');
