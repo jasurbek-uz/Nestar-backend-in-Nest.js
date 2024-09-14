@@ -35,7 +35,7 @@ export class BatchService {
     console.log("batchRolBack");
   }
 
-  public async batchProperties(): Promise<void> {
+  public async batchTopProperties(): Promise<void> {
     const properties: Property[] = await this.propertyModel
       .find({
         propertyStatus: PropertyStatus.ACTIVE,
@@ -52,7 +52,7 @@ export class BatchService {
     console.log('batchProperties');
   }
 
-  public async batchAgents(): Promise<void> {
+  public async batchTopAgents(): Promise<void> {
     const agents: Member[] = await this.memberModel
       .find({
         memberType: MemberType.AGENT,

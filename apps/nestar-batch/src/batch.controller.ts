@@ -28,7 +28,7 @@ export class NestarBatchController {
     try {
     this.logger.debug['context'] = BATCH_TOP_PROPERTIES;
       this.logger.debug('EXECUTED');
-       await this.BatchService.batchProperties();
+       await this.BatchService.batchTopProperties();
 			} catch (err) {
 				this.logger.error(err);
 			}
@@ -40,7 +40,7 @@ export class NestarBatchController {
     try {
      this.logger.debug['context'] = BATCH_TOP_AGENTS;
       this.logger.debug('EXECUTED');
-      await this.BatchService.batchAgents();
+      await this.BatchService.batchTopAgents();
 			} catch (err) {
 				this.logger.error(err);
 			}
