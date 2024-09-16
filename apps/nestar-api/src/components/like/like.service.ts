@@ -13,40 +13,41 @@ import { lookupFavorite } from "../../libs/config";
 
 @Injectable()
 export class LikeService {
-  constructor(@InjectModel('Like') private readonly likeModel: Model<Like>) { }
-  
-  public async toggleLike(input: LikeInput): Promise<number>{
-    const search: T = { memberId: input.memberId, likeRefId: input.likeRefId },
-      exist = await this.likeModel.findOne(search).exec();
-    let modifier = 1;
+	constructor(@InjectModel('Like') private readonly likeModel: Model<Like>) {}
 
-    if (exist) {
-      await this.likeModel.findOneAndDelete(search).exec();
-      modifier = -1;
-    } else {
-      try {
-        await this.likeModel.create(input);
-      } catch (err) {
-        console.log('Error, Service.model:', err.message);
-        throw new BadRequestException(Message.CREATE_FAILED);
-      }
-    }
-    console.log(`-Like modifier ${modifier} -`)
-    return modifier;
-}
+	public async toggleLike(input: LikeInput): Promise<number> {
+		const search: T = { memberId: input.memberId, likeRefId: input.likeRefId },
+			exist = await this.likeModel.findOne(search).exec();
+		let modifier = 1;
 
-  public async checkLikeExistence(input:LikeInput ): Promise<MeLiked[]>{
-    const { memberId, likeRefId } = input;
-    const result = await this.likeModel.findOne({ memberId: memberId, likeRefId:likeRefId }).exec();
-    return result ? [{ memberId: memberId, likeRefId: likeRefId, myFavorite: true }] : [];
-  }
+		if (exist) {
+			await this.likeModel.findOneAndDelete(search).exec();
+			modifier = -1;
+		} else {
+			try {
+				await this.likeModel.create(input);
+			} catch (err) {
+				console.log('Error, Service.model:', err.message);
+				throw new BadRequestException(Message.CREATE_FAILED);
+			}
+		}
+		console.log(`-Like modifier ${modifier} -`);
+		return modifier;
+	}
 
-  public async getFavoritesProperties(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties>{
-    const { page, limit } = input;
-    const match: T = { likeGroup: LikeGroup.PROPERTY, memberId: memberId };
+	public async checkLikeExistence(input: LikeInput): Promise<MeLiked[]> {
+		const { memberId, likeRefId } = input;
+		const result = await this.likeModel.findOne({ memberId: memberId, likeRefId: likeRefId }).exec();
+		return result ? [{ memberId: memberId, likeRefId: likeRefId, myFavorite: true }] : [];
+	}
 
-    const data: T = await this.likeModel
+	public async getFavoriteProperties(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
+		const { page, limit } = input;
+		const match: T = { likeGroup: LikeGroup.PROPERTY, memberId: memberId };
+
+		const data: T = await this.likeModel
 			.aggregate([
+				//likeloglarni beradi bizga bu qismi
 				{ $match: match },
 				{ $sort: { updatedAt: -1 } },
 				{
@@ -60,18 +61,19 @@ export class LikeService {
 				{ $unwind: '$favoriteProperty' },
 				{
 					$facet: {
-            list: [{ $skip: (page - 1) * limit }, { $limit: limit }, lookupFavorite,
-              { $unwind: '$favoriteProperty.memberData' }],
-            metaCounter:[{$count:'total'}],
+						list: [
+							{ $skip: (page - 1) * limit },
+							{ $limit: limit },
+							lookupFavorite,
+							{ $unwind: '$favoriteProperty.memberData' },
+						],
+						metaCounter: [{ $count: 'total' }],
 					},
 				},
 			])
 			.exec();
-    
-    console.log("data:", data[0].list[0]);
-    const result: Properties = { list: [], metaCounter: data[0].metaCounter };
-    result.list = data[0].list.map((ele) => ele.favoriteProperty);
-    console.log('result:', result);
-    return null;
-  }
+		const result: Properties = { list: [], metaCounter: data[0].metaCounter };
+		result.list = data[0].list.map((ele) => ele.favoriteProperty);
+		return result;
+	}
 }

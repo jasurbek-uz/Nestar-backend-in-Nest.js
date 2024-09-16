@@ -33,15 +33,6 @@ console.log(sumOfUnique([1, 2, 3, 2]));
 
 
 
-
-
-
-
-
-
-
-
-
 // ZT-TASK:
 
 // Shunday function yozing, u parametridagi string ichida 1 martadan ortiq qaytarilmagan birinchi harf indeksini qaytarsin.
