@@ -7,7 +7,6 @@ interface MessagePayload{
   event: string;
   text: string;
 }
-
 interface InfoPayload{
   event: string;
   totalClients: number;
